@@ -134,6 +134,8 @@ var createLocationPicker = function (settings, node) {
 
     if (val.length < 3) {
       if (xhr) { xhr.abort(); }
+      node.val('');
+      node.removeData();
       locList.hide();
       locInput.removeClass('location-picker-loading');
       return;
