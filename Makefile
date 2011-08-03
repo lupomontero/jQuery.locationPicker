@@ -1,35 +1,37 @@
 VERSION = $(shell cat version.txt)
-
-SRC = src/jquery.location-picker.js
+PLUGIN_NAME=jquery.location-picker
+SRC = src/${PLUGIN_NAME}.js
 BUILD_DIR = build
 DIST_DIR = ${BUILD_DIR}/dist
 
-COMPRESSED = ${DIST_DIR}/jquery.location-picker-${VERSION}.min.js
-COMPILED = ${DIST_DIR}/jquery.location-picker-${VERSION}.compiled.js
+COMPRESSED = ${DIST_DIR}/${PLUGIN_NAME}-${VERSION}.min.js
+COMPILED = ${DIST_DIR}/${PLUGIN_NAME}-${VERSION}.compiled.js
 
 .PHONY: all
 
-all: prepare jslint minify compile
+all: prepare jslint build
 
 ${DIST_DIR}:
 	@@mkdir -p ${DIST_DIR}
 
 prepare: ${DIST_DIR}
 
+preparedev:
+	@echo "Linking dev src file to demo..."
+	@rm -f demo/js/${PLUGIN_NAME}.js
+	@ln src/${PLUGIN_NAME}.js demo/js/${PLUGIN_NAME}.js
+
 jslint:
 	@echo "\nRunning jslint (using node-jslint)"
 	@jslint ${SRC}
 
-minify: prepare
+build: prepare
 	@echo "\nMinifying with YUI compressor..."
 	@java -jar build/yuicompressor-2.4.2.jar ${SRC} \
 		--charset utf-8 \
 		--type js > ${COMPRESSED}
 	@echo "Minified file created: "${COMPRESSED}
-	@gzip -c ${COMPRESSED} > ${COMPRESSED}.gz
 	@echo "Minified file compressed using gunzip."
-
-compile: prepare
 	@echo "\nCompiling with Closure Compiler..."
 	@java -jar build/closure-compiler.jar \
 		--charset utf-8 \
@@ -37,11 +39,15 @@ compile: prepare
 		--js ${SRC} \
 		--js_output_file ${COMPILED}
 	@echo "Compiled file created: "${COMPILED}
+	@echo "Linking compressed src file to demo..."
+	@rm -f demo/js/${PLUGIN_NAME}.js
+	@ln ${COMPRESSED} demo/js/${PLUGIN_NAME}.js
 
 clean:
-	@echo "\nNothing to clean up."
+	@echo "\nRemoving built sources...."
+	@rm -f ${COMPRESSED} ${COMPILED}
 
 publishdemo:
 	@rsync -e ssh --delete --rsh='ssh -p2222' -aruzP --exclude "*.swp" \
-		demos/ \
+		demo/ \
 		enoisecom@e-noise.com:/home/sites/enoisecom/demos/jQuery.locationPicker/
