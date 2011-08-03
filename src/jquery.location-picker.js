@@ -154,7 +154,7 @@ var createLocationPicker = function (settings, node) {
     timeoutId = setTimeout(function () {
       var i, len;
 
-      // abort all other previously triggered xhrs
+      // abort previously triggered xhr
       if (xhr) {
         xhr.abort();
       }
