@@ -1,8 +1,7 @@
 VERSION = $(shell cat version.txt)
 PLUGIN_NAME=jquery.location-picker
 SRC = src/${PLUGIN_NAME}.js
-BUILD_DIR = build
-DIST_DIR = ${BUILD_DIR}/dist
+DIST_DIR = build/dist
 
 COMPRESSED = ${DIST_DIR}/${PLUGIN_NAME}-${VERSION}.min.js
 COMPILED = ${DIST_DIR}/${PLUGIN_NAME}-${VERSION}.compiled.js
