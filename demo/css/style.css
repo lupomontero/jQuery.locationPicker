@@ -10,15 +10,15 @@ html {
 
 body {
   background: #666666 url(../img/alert-overlay.png) repeat-x;
-  border:1px solid #444444;
-  color:#E3E3E3;
+  border: 1px solid #444444;
+  color: #E3E3E3;
   font: 14px sans-serif sans-serif;
-  font-family:'Quattrocento Sans', arial, sans-serif;
-  letter-spacing:0.06em;
+  font-family: 'Quattrocento Sans', arial, sans-serif;
+  letter-spacing: 0.06em;
   margin: 30px auto;
   padding: 20px;
-  width:480px;
-  word-spacing:-0.1em;
+  width: 480px;
+  word-spacing: -0.1em;
   -moz-border-radius: 10px;
   -webkit-border-radius: 10px;
   border-radius: 10px;
@@ -27,9 +27,9 @@ body {
 }
 
 h1 {
-  font-size:3.2em;
-  margin:0 0 28px;
-  padding:0 0 0 11px;
+  font-size: 2.6em;
+  margin: 0 0 28px;
+  padding: 0 0 0 11px;
   text-shadow: 0 -1px 1px rgba(0, 0, 0, 0.25);
   color: #3B240B;
 }
@@ -59,6 +59,29 @@ input {
   padding: 10px;
 }
 
+.button {
+  background: #222 url("../img/alert-overlay.png") repeat-x;
+  display: inline-block;
+  padding: 5px 10px 6px;
+  color: #FFF;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 11px;
+  line-height: 1;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  text-shadow: 0 -1px 1px rgba(0, 0, 0, 0.25);
+  border: 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.25);
+  position: relative;
+  cursor: pointer;
+  z-index: 1;
+}
+
+/* jQuery.locationPicker styles start here... */
+
 .location-picker ul {
   margin: 0;
   padding: 0;
@@ -66,6 +89,9 @@ input {
   background: #333;
   color: #CCC;
   z-index: 9999;
+  position: absolute;
+  left: 3px;
+  top: 23px;
 }
 
 .location-picker ul li a {
@@ -100,6 +126,17 @@ input {
   padding: 5px;
   background: #666;
   color: white;
+  width: auto;
+  /*IE ugliness*/
+  zoom: 1;
+  *display: inline;
+}
+
+.location-picker .placeholder div {
+  display: inline-block;
+  /*IE ugliness*/
+  zoom: 1;
+  *display: inline;
 }
 
 .location-picker .placeholder a {
@@ -111,24 +148,7 @@ input {
   text-shadow: 0 -1px 1px rgba(0, 0, 0, 0.25);
   padding: 0 3px;
   margin: 0 0 0 8px;
-}
-
-.button {
-  background: #222 url(../img/alert-overlay.png) repeat-x;
-  display: inline-block;
-  padding: 5px 10px 6px;
-  color: white !important;
-  text-decoration: none;
-  font-weight: bold;
-  font-size: 11px;
-  line-height: 1;
-  -moz-border-radius: 5px;
-  -webkit-border-radius: 5px;
-  -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
-  -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
-  text-shadow: 0 -1px 1px rgba(0, 0, 0, 0.25);
-  border: 0;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.25);
-  position: relative;
-  cursor: pointer;
+  /*IE ugliness*/
+  zoom: 1;
+  *display: inline;
 }
