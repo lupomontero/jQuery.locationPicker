@@ -132,7 +132,12 @@ var createLocationPicker = function (settings, node) {
     if (val === searchterm) { return; }
     searchterm = val;
 
-    if (val.length < 3) { return; }
+    if (val.length < 3) {
+      if (xhr) { xhr.abort(); }
+      locList.hide();
+      locInput.removeClass('location-picker-loading');
+      return;
+    }
 
     if (timeoutId) {
       clearTimeout(timeoutId);
