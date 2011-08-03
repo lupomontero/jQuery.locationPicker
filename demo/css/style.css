@@ -1,0 +1,134 @@
+/**
+ * jQuery.locationPicker Demo Theme
+ *
+ * @author Lupo Montero <lupo@e-noise.com>
+ */
+
+html {
+  background: #222;
+}
+
+body {
+  background: #666666 url(../img/alert-overlay.png) repeat-x;
+  border:1px solid #444444;
+  color:#E3E3E3;
+  font: 14px sans-serif sans-serif;
+  font-family:'Quattrocento Sans', arial, sans-serif;
+  letter-spacing:0.06em;
+  margin: 30px auto;
+  padding: 20px;
+  width:480px;
+  word-spacing:-0.1em;
+  -moz-border-radius: 10px;
+  -webkit-border-radius: 10px;
+  border-radius: 10px;
+  -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+h1 {
+  font-size:3.2em;
+  margin:0 0 28px;
+  padding:0 0 0 11px;
+  text-shadow: 0 -1px 1px rgba(0, 0, 0, 0.25);
+  color: #3B240B;
+}
+
+a {
+  color: #527599;
+}
+
+form {
+  background: #CCC url(../img/alert-overlay.png) repeat-x;
+  border: 1px solid #666;
+  padding: 20px;
+  border-radius: 10px;
+  color: #333;
+}
+
+label {
+  display: block;
+}
+
+input {
+  font-size: 1.1em;
+  padding: 5px;
+}
+
+.syntaxhighlighter {
+  padding: 10px;
+}
+
+.location-picker ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  background: #333;
+  color: #CCC;
+  z-index: 9999;
+}
+
+.location-picker ul li a {
+  color: #CCC;
+  display: inline-block;
+  padding: 6px 6px 3px 24px;
+  background-repeat: no-repeat;
+  background-position: 3px 6px;
+  text-decoration: none;
+}
+
+.location-picker ul li:hover {
+  color: #333;
+  background-color: #E0F2F7;
+}
+
+.location-picker ul li:hover a {
+  color: #333;
+}
+
+.location-picker-loading {
+  background-image: url("../img/loading.gif");
+  background-repeat: no-repeat;
+  background-position: right 5px;
+}
+
+.location-picker .placeholder {
+  display: inline-block;
+  font-size: 1.1em;
+  border: 1px solid #CCC;
+  margin: 3px 0 0 0;
+  padding: 5px;
+  background: #666;
+  color: white;
+}
+
+.location-picker .placeholder a {
+  display: inline-block;
+  background: #333;
+  color: #FFF;
+  text-decoration: none;
+  font-weight: bold;
+  text-shadow: 0 -1px 1px rgba(0, 0, 0, 0.25);
+  padding: 0 3px;
+  margin: 0 0 0 8px;
+}
+
+.button {
+  background: #222 url(../img/alert-overlay.png) repeat-x;
+  display: inline-block;
+  padding: 5px 10px 6px;
+  color: white !important;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 11px;
+  line-height: 1;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  text-shadow: 0 -1px 1px rgba(0, 0, 0, 0.25);
+  border: 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.25);
+  position: relative;
+  cursor: pointer;
+}

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8" />
+  <title>jQuery.locationPicker() Demo</title>
+  <link href="css/style.css" rel="stylesheet" />
+  <link href="http://fonts.googleapis.com/css?family=Quattrocento+Sans" rel="stylesheet" />
+  <link href="css/syntaxhighlighter/sh.min.css" rel="stylesheet" />
+</head>
+<body>
+
+  <h1>jQuery.locationPicker()</h1>
+  <a href="http://github.com/E-NOISE/jQuery.locationPicker">
+    <img
+      style="position: absolute; top: 0; right: 0; border: 0;"
+      src="http://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png"
+      alt="Fork me on GitHub" />
+  </a>
+
+  <form id="demo-form">
+  <p>
+    <label for="loc">Location:</label>
+    <input name="loc" id="loc"> (ie: Durham, NC)
+  </p>
+  <p>
+    <input type="submit" class="button" value="See value stored in original field and data objects" />
+  </p>
+  </form>
+
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+  <script src="js/jquery.location-picker.js"></script>
+  <script src="js/json2.js"></script>
+  <script src="js/syntaxhighlighter/sh.min.js"></script>
+  <script>
+  jQuery(document).ready(function ($) {
+    var
+      form = $('#demo-form'),
+      field = $('#loc'),
+      msgConainer = $('<div>'),
+      shClass = ' class="brush: js; gutter: false; fontsize: 100; first-line: 1;"';
+
+    field.locationPicker();
+    form.after(msgConainer);
+    form.submit(function () {
+      var msg = $('<div><p>Value: "' + field.val() + '"</p></div>');
+      msg.append('<div><h3>loc</h3><pre' + shClass + '>' + JSON.stringify(field.data('loc'), null, '  ') + '</pre></div>');
+      msg.append('<div><h3>geo</h3><pre' + shClass + '>' + JSON.stringify(field.data('geo'), null, '  ') + '</pre></div>');
+      msgConainer.html(msg);
+      SyntaxHighlighter.autoloader('js js/syntaxhighlighter/shBrushJScript.js');
+      SyntaxHighlighter.all();
+      return false;
+    });
+  });
+  </script>
+</body>
+</html>
