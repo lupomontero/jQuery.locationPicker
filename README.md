@@ -3,7 +3,7 @@ jQuery.locationPicker()
 
 This plugin takes an input field and turns it into a "Facebook style" location
 (town/city and country) picker. The "picker" suggests locations found searching
-for what the use is typing using
+for what the user is typing using
 [Google's Geocoding API](http://code.google.com/apis/maps/documentation/geocoding/).
 
 So far it seems to work fine (meaning I've testes) on:
