@@ -23,6 +23,10 @@ var makeListClickHandler = function (ui) {
     ui.locInput.val(title).hide();
     ui.selHolder.html(title);
     ui.selHolderWrapper.show();
+
+    // have to set display to inline-block because .show() changes it to block
+    ui.selHolderWrapper.css('display', 'inline-block');
+
     ui.locList.hide();
   };
 };
@@ -105,9 +109,9 @@ var createLocationPicker = function (settings, node) {
       node: node,
       wrapper: $('<div class="location-picker" style="position: relative; display: inline;">'),
       locInput: $('<input size="30">'),
-      locList: $('<ul style="position: absolute; left: 0;">').hide(),
-      selHolderWrapper: $('<span class="placeholder">').hide(), // selected placeholder wrapper
-      selHolder: $('<span>'), // selected placeholder,
+      locList: $('<ul>').hide(),
+      selHolderWrapper: $('<div class="placeholder">').hide(), // selected placeholder wrapper
+      selHolder: $('<div>'), // selected placeholder,
       selHolderCloseBtn: $('<a href="#">X</a>')
     },
     wrapper = ui.wrapper,
