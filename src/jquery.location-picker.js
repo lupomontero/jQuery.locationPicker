@@ -10,12 +10,15 @@
 (function ($) {
 
 var defSettings = {
+  proxy_url: 'proxy.php',
   flags_path: 'img/flags'
 };
 
 var makeListClickHandler = function (ui) {
-  return function () {
+  return function (e) {
     var a = $(this), title = a.attr('title');
+
+    e.preventDefault();
 
     ui.node.val(title.replace(/, /g, ','));
     ui.node.data('loc', a.data('loc'));
@@ -160,7 +163,7 @@ var createLocationPicker = function (settings, node) {
       }
 
       xhr = $.ajax({
-        url: 'proxy.php?s=' + encodeURIComponent(val),
+        url: settings.proxy_url + '?s=' + encodeURIComponent(val),
         dataType: 'json',
         success: function (data) {
           if (!data || !data.status || data.status !== 'OK') {
@@ -174,7 +177,9 @@ var createLocationPicker = function (settings, node) {
     }, 500);
   });
 
-  selHolderCloseBtn.click(function () {
+  selHolderCloseBtn.click(function (e) {
+    e.preventDefault();
+
     selHolderWrapper.hide();
     locInput.show();
     locList.show();
