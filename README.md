@@ -15,6 +15,9 @@ So far it seems to work fine (meaning I've testes) on:
 * iOS (tested on iOS Simulator both for iPhone and iPad)
 * Internet Explorer 8
 
+The plugin is built on top of
+[jQuery.suggest](https://github.com/lupomontero/jQuery.suggest).
+
 ## Demo
 
 [http://demos.e-noise.com/jQuery.locationPicker/](http://demos.e-noise.com/jQuery.locationPicker/)
@@ -25,6 +28,7 @@ So far it seems to work fine (meaning I've testes) on:
     <input name="loc" id="loc">
 
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+    <script src="js/jquery.suggest.js"></script>
     <script src="js/jquery.location-picker.js"></script>
     <script>
     jQuery(document).ready(function ($) {
