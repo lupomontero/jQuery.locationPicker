@@ -59,30 +59,9 @@ input {
   padding: 10px;
 }
 
-.button {
-  background: #222 url("../img/alert-overlay.png") repeat-x;
-  display: inline-block;
-  padding: 5px 10px 6px;
-  color: #FFF;
-  text-decoration: none;
-  font-weight: bold;
-  font-size: 11px;
-  line-height: 1;
-  -moz-border-radius: 5px;
-  -webkit-border-radius: 5px;
-  -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
-  -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
-  text-shadow: 0 -1px 1px rgba(0, 0, 0, 0.25);
-  border: 0;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.25);
-  position: relative;
-  cursor: pointer;
-  z-index: 1;
-}
+/* jQuery.suggest styles start here... */
 
-/* jQuery.locationPicker styles start here... */
-
-.location-picker ul {
+.suggest ul {
   margin: 0;
   padding: 0;
   list-style: none;
@@ -94,31 +73,56 @@ input {
   top: 23px;
 }
 
-.location-picker ul li a {
-  color: #CCC;
-  display: inline-block;
-  padding: 6px 6px 3px 24px;
-  background-repeat: no-repeat;
-  background-position: 3px 6px;
-  text-decoration: none;
+.suggest ul li {
+  border-bottom: 1px solid #666;
 }
 
-.location-picker ul li:hover {
+.suggest ul li:hover {
   color: #333;
   background-color: #E0F2F7;
 }
 
-.location-picker ul li:hover a {
+.suggest ul li a {
+  position: relative;
+  color: #CCC;
+  display: inline-block;
+  padding: 6px 10px 3px 30px;
+  text-decoration: none;
+  height: 19px;
+}
+
+.suggest ul li:hover a {
   color: #333;
 }
 
-.location-picker-loading {
+.suggest ul li a img {
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  width: 16px;
+  height: 16px;
+}
+
+.suggest-title {
+  margin: 0 0 6px;
+  padding: 0;
+  /* font-size: 1.2em; */
+  font-weight: normal;
+}
+
+.suggest-subtitle {
+  font-style: italic;
+  font-size: 0.9em;
+  color: #888;
+}
+
+.suggest-loading {
   background-image: url("../img/loading.gif");
   background-repeat: no-repeat;
   background-position: right 5px;
 }
 
-.location-picker .placeholder {
+.suggest .placeholder {
   display: inline-block;
   font-size: 1.1em;
   border: 1px solid #CCC;
@@ -132,14 +136,14 @@ input {
   *display: inline;
 }
 
-.location-picker .placeholder div {
+.suggest .placeholder div {
   display: inline-block;
   /*IE ugliness*/
   zoom: 1;
   *display: inline;
 }
 
-.location-picker .placeholder a {
+.suggest .placeholder a {
   display: inline-block;
   background: #333;
   color: #FFF;

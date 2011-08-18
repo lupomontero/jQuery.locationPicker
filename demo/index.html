@@ -22,12 +22,10 @@
     <label for="loc">Location:</label>
     <input name="loc" id="loc"> (ie: Durham, NC)
   </p>
-  <p>
-    <input type="submit" class="button" value="See value stored in original field and data objects" />
-  </p>
   </form>
 
   <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+  <script src="js/jquery.suggest.js"></script>
   <script src="js/jquery.location-picker.js"></script>
   <script src="js/json2.js"></script>
   <script src="js/syntaxhighlighter/sh.min.js"></script>
@@ -37,19 +35,26 @@
       form = $('#demo-form'),
       field = $('#loc'),
       msgConainer = $('<div>'),
-      shClass = ' class="brush: js; gutter: false; fontsize: 100; first-line: 1;"';
+      shClass = ' class="brush: js; gutter: false; fontsize: 100; first-line: 1;"',
+      showData = function () {
+        var msg = $('<div><p>Value: "' + field.val() + '"</p></div>');
+        msg.append('<div><h3>data</h3><pre' + shClass + '>' + JSON.stringify(field.data('suggest'), null, '  ') + '</pre></div>');
+        msgConainer.html(msg);
+        SyntaxHighlighter.autoloader('js js/syntaxhighlighter/shBrushJScript.js');
+        SyntaxHighlighter.all();
+        msgConainer.show();
+      };
 
-    field.locationPicker();
-    form.after(msgConainer);
-    form.submit(function () {
-      var msg = $('<div><p>Value: "' + field.val() + '"</p></div>');
-      msg.append('<div><h3>loc</h3><pre' + shClass + '>' + JSON.stringify(field.data('loc'), null, '  ') + '</pre></div>');
-      msg.append('<div><h3>geo</h3><pre' + shClass + '>' + JSON.stringify(field.data('geo'), null, '  ') + '</pre></div>');
-      msgConainer.html(msg);
-      SyntaxHighlighter.autoloader('js js/syntaxhighlighter/shBrushJScript.js');
-      SyntaxHighlighter.all();
-      return false;
+    field.locationPicker({
+      select: function (e, val) {
+        showData();
+      },
+      clear: function () {
+        msgConainer.hide();
+      }
     });
+
+    form.after(msgConainer);
   });
   </script>
 </body>

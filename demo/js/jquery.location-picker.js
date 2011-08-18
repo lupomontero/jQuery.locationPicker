@@ -1,6 +1,124 @@
-/*!
+/*!!
  * jQuery.locationPicker() plugin.
  *
  * @author Lupo Montero <lupo@e-noise.com>
  */
-(function(c){var e={proxy_url:"proxy.php",flags_path:"img/flags"};var a=function(f){return function(h){var g=c(this),i=g.attr("title");h.preventDefault();f.node.val(i.replace(/, /g,","));f.node.data("loc",g.data("loc"));f.node.data("geo",g.data("geo"));f.locInput.val(i).hide();f.selHolder.html(i);f.selHolderWrapper.show();f.selHolderWrapper.css("display","inline-block");f.locList.hide()}};var d=function(h,r,o){var p,q,n,l,m,g,u,t,w,s,v,f="";if(!o||!o.length){return}r.locList.hide().html("");for(p=0,q=o.length;p<q;p++){w=o[p];loc={};u=c("<li>");t=c("<a>");t.attr("href","#");t.html(w.formatted_address);s=w.address_components||[];for(n=0,l=s.length;n<l;n++){for(m=0,g=s[n].types.length;m<g;m++){if(s[n].types[m]==="country"){loc.country={short_name:s[n].short_name,long_name:s[n].long_name}}else{if(s[n].types[m]==="locality"){loc.locality={short_name:s[n].short_name,long_name:s[n].long_name}}else{if(s[n].types[m]==="administrative_area_level_1"){loc.state={short_name:s[n].short_name,long_name:s[n].long_name}}}}}}f="";if(loc.locality){f+=loc.locality.short_name}if(loc.state&&loc.state.short_name&&(!loc.locality||loc.state.short_name!==loc.locality.short_nameshort_name)){if(f.length>0){f+=", "}f+=loc.state.short_name}if(loc.country){f+=", "+loc.country.short_name;v=loc.country.short_name.toLowerCase();t.addClass(v);if(h.flags_path){t.css("background-image","url("+h.flags_path+"/"+v+".png)")}}t.attr("title",f);t.data("loc",loc);t.data("geo",w);t.click(a(r));u.append(t);r.locList.append(u)}r.locList.show()};var b=function(j,i){var l={node:i,wrapper:c('<div class="location-picker" style="position: relative; display: inline;">'),locInput:c('<input size="30">'),locList:c("<ul>").hide(),selHolderWrapper:c('<div class="placeholder">').hide(),selHolder:c("<div>"),selHolderCloseBtn:c('<a href="#">X</a>')},f=l.wrapper,k=l.locInput,g=l.locList,m=l.selHolderWrapper,q=l.selHolder,h=l.selHolderCloseBtn,n,p="",o;k.keydown(function(){if(n){clearTimeout(n)}});k.keyup(function(){var r=k.val();if(r===p){return}p=r;if(r.length<3){if(o){o.abort()}i.val("");i.removeData();g.hide();k.removeClass("location-picker-loading");return}if(n){clearTimeout(n)}k.addClass("location-picker-loading");n=setTimeout(function(){var t,s;if(o){o.abort()}o=c.ajax({url:j.proxy_url+"?s="+encodeURIComponent(r),dataType:"json",success:function(u){if(!u||!u.status||u.status!=="OK"){}k.removeClass("location-picker-loading");d(j,l,u.results)}})},500)});h.click(function(r){r.preventDefault();m.hide();k.show();g.show()});m.append(q);m.append(h);f.append(k);f.append(m);f.append(g);i.hide().before(f)};c.fn.locationPicker=function(f){var g=c.extend(e,f||{});c(this).each(function(h){b(g,c(this))})}})(jQuery);
+
+/*jslint browser: true */
+/*global jQuery: false */
+
+(function ($) {
+
+var defSettings = {
+  proxy_url: 'proxy.php',
+  flags_path: 'img/flags'
+};
+
+var buildSuggestions = function (settings, results, cb) {
+  var i, len, j, len2, k, len3, suggestions = [], result, loc, address_comps, iso, pn = '';
+
+  if (!results || !results.length) {
+    return;
+  }
+
+  for (i = 0, len = results.length; i < len; i++) {
+    result = results[i];
+    loc = {
+      value: '',
+      title: '',
+      subtitle: null,
+      img: '',
+      data: { raw: result }
+    };
+
+    address_comps = result.address_components || [];
+    for (j = 0, len2 = address_comps.length; j < len2; j++) {
+      for (k = 0, len3 = address_comps[j].types.length; k < len3; k++) {
+        if (address_comps[j].types[k] === 'country') {
+          loc.data.country = {
+            short_name: address_comps[j].short_name,
+            long_name: address_comps[j].long_name
+          };
+        } else if (address_comps[j].types[k] === 'locality') {
+          loc.data.locality = {
+            short_name: address_comps[j].short_name,
+            long_name: address_comps[j].long_name
+          };
+        } else if (address_comps[j].types[k] === 'administrative_area_level_1') {
+          loc.data.state = {
+            short_name: address_comps[j].short_name,
+            long_name: address_comps[j].long_name
+          };
+        }
+      }
+    }
+
+    pn = '';
+
+    if (loc.data.locality) { pn += loc.data.locality.short_name; }
+    if (loc.data.state && loc.data.state.short_name && (!loc.data.locality || loc.data.state.short_name !== loc.data.locality.short_nameshort_name)) {
+      if (pn.length > 0) { pn += ', '; }
+      pn += loc.data.state.short_name;
+    }
+
+    if (loc.data.country) {
+      pn += ', ' + loc.data.country.short_name;
+
+      iso = loc.data.country.short_name.toLowerCase();
+      if (settings.flags_path) {
+        loc.img = iso + '.png';
+      }
+    }
+
+    loc.value = pn.replace(/, /g, ',');
+    loc.title = pn;
+    suggestions.push(loc);
+  }
+
+  cb(suggestions);
+};
+
+var createLocationPicker = function (settings, node) {
+  var xhr;
+
+  node.suggest({
+    img_path: settings.flags_path,
+    search: function (s, cb) {
+      // abort previously triggered xhr
+      if (xhr) {
+        xhr.abort();
+      }
+
+      xhr = $.ajax({
+        url: settings.proxy_url + '?s=' + encodeURIComponent(s),
+        dataType: 'json',
+        success: function (data) {
+          if (!data || !data.status || data.status !== 'OK') {
+            // handle error
+          }
+
+          buildSuggestions(settings, data.results, cb);
+        }
+      });
+    },
+    select: function (e, val) {
+      settings.select && settings.select(e, val);
+    },
+    clear: function () {
+      if (xhr) { xhr.abort(); }
+      settings.clear && settings.clear();
+    }
+  });
+};
+
+// export plugin
+$.fn.locationPicker = function (options) {
+  var settings = $.extend(defSettings, options || {});
+
+  // Add behaviour to each selected input node
+  $(this).each(function (i) {
+    createLocationPicker(settings, $(this));
+  });
+};
+
+})(jQuery);

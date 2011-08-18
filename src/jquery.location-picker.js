@@ -14,58 +14,38 @@ var defSettings = {
   flags_path: 'img/flags'
 };
 
-var makeListClickHandler = function (ui) {
-  return function (e) {
-    var a = $(this), title = a.attr('title');
-
-    e.preventDefault();
-
-    ui.node.val(title.replace(/, /g, ','));
-    ui.node.data('loc', a.data('loc'));
-    ui.node.data('geo', a.data('geo'));
-    ui.locInput.val(title).hide();
-    ui.selHolder.html(title);
-    ui.selHolderWrapper.show();
-
-    // have to set display to inline-block because .show() changes it to block
-    ui.selHolderWrapper.css('display', 'inline-block');
-
-    ui.locList.hide();
-  };
-};
-
-var buildSuggestions = function (settings, ui, results) {
-  var i, len, j, len2, k, len3, li, a, result, address_comps, iso, pn = '';
+var buildSuggestions = function (settings, results, cb) {
+  var i, len, j, len2, k, len3, suggestions = [], result, loc, address_comps, iso, pn = '';
 
   if (!results || !results.length) {
     return;
   }
 
-  ui.locList.hide().html('');
-
   for (i = 0, len = results.length; i < len; i++) {
     result = results[i];
-    loc = {};
-    li = $('<li>');
-    a = $('<a>');
-    a.attr('href', '#');
-    a.html(result.formatted_address);
+    loc = {
+      value: '',
+      title: '',
+      subtitle: null,
+      img: '',
+      data: { raw: result }
+    };
 
     address_comps = result.address_components || [];
     for (j = 0, len2 = address_comps.length; j < len2; j++) {
       for (k = 0, len3 = address_comps[j].types.length; k < len3; k++) {
         if (address_comps[j].types[k] === 'country') {
-          loc.country = {
+          loc.data.country = {
             short_name: address_comps[j].short_name,
             long_name: address_comps[j].long_name
           };
         } else if (address_comps[j].types[k] === 'locality') {
-          loc.locality = {
+          loc.data.locality = {
             short_name: address_comps[j].short_name,
             long_name: address_comps[j].long_name
           };
         } else if (address_comps[j].types[k] === 'administrative_area_level_1') {
-          loc.state = {
+          loc.data.state = {
             short_name: address_comps[j].short_name,
             long_name: address_comps[j].long_name
           };
@@ -75,122 +55,60 @@ var buildSuggestions = function (settings, ui, results) {
 
     pn = '';
 
-    if (loc.locality) { pn += loc.locality.short_name; }
-    if (loc.state && loc.state.short_name && (!loc.locality || loc.state.short_name !== loc.locality.short_nameshort_name)) {
+    if (loc.data.locality) { pn += loc.data.locality.short_name; }
+    if (loc.data.state && loc.data.state.short_name && (!loc.data.locality || loc.data.state.short_name !== loc.data.locality.short_nameshort_name)) {
       if (pn.length > 0) { pn += ', '; }
-      pn += loc.state.short_name;
+      pn += loc.data.state.short_name;
     }
 
-    if (loc.country) {
-      pn += ', ' + loc.country.short_name;
+    if (loc.data.country) {
+      pn += ', ' + loc.data.country.short_name;
 
-      iso = loc.country.short_name.toLowerCase();
-      a.addClass(iso);
+      iso = loc.data.country.short_name.toLowerCase();
       if (settings.flags_path) {
-        a.css('background-image', 'url(' + settings.flags_path +'/' + iso + '.png)');
+        loc.img = iso + '.png';
       }
     }
 
-    a.attr('title', pn);
-
-    // store data objects so they can be assigned to original node on click
-    a.data('loc', loc);
-    a.data('geo', result);
-
-    a.click(makeListClickHandler(ui));
-
-    li.append(a);
-    ui.locList.append(li);
+    loc.value = pn.replace(/, /g, ',');
+    loc.title = pn;
+    suggestions.push(loc);
   }
 
-  ui.locList.show();
+  cb(suggestions);
 };
 
 var createLocationPicker = function (settings, node) {
-  var
-    ui = {
-      node: node,
-      wrapper: $('<div class="location-picker" style="position: relative; display: inline;">'),
-      locInput: $('<input size="30">'),
-      locList: $('<ul>').hide(),
-      selHolderWrapper: $('<div class="placeholder">').hide(), // selected placeholder wrapper
-      selHolder: $('<div>'), // selected placeholder,
-      selHolderCloseBtn: $('<a href="#">X</a>')
-    },
-    wrapper = ui.wrapper,
-    locInput = ui.locInput,
-    locList = ui.locList,
-    selHolderWrapper = ui.selHolderWrapper,
-    selHolder = ui.selHolder,
-    selHolderCloseBtn = ui.selHolderCloseBtn,
-    timeoutId,
-    searchterm = '',
-    xhr;
+  var xhr;
 
-  locInput.keydown(function () {
-    if (timeoutId) {
-      clearTimeout(timeoutId);
-    }
-  });
-
-  locInput.keyup(function () {
-    var val = locInput.val();
-
-    if (val === searchterm) { return; }
-    searchterm = val;
-
-    if (val.length < 3) {
-      if (xhr) { xhr.abort(); }
-      node.val('');
-      node.removeData();
-      locList.hide();
-      locInput.removeClass('location-picker-loading');
-      return;
-    }
-
-    if (timeoutId) {
-      clearTimeout(timeoutId);
-    }
-
-    locInput.addClass('location-picker-loading');
-
-    timeoutId = setTimeout(function () {
-      var i, len;
-
+  node.suggest({
+    img_path: settings.flags_path,
+    search: function (s, cb) {
       // abort previously triggered xhr
       if (xhr) {
         xhr.abort();
       }
 
       xhr = $.ajax({
-        url: settings.proxy_url + '?s=' + encodeURIComponent(val),
+        url: settings.proxy_url + '?s=' + encodeURIComponent(s),
         dataType: 'json',
         success: function (data) {
           if (!data || !data.status || data.status !== 'OK') {
             // handle error
           }
 
-          locInput.removeClass('location-picker-loading');
-          buildSuggestions(settings, ui, data.results);
+          buildSuggestions(settings, data.results, cb);
         }
       });
-    }, 500);
+    },
+    select: function (e, val) {
+      settings.select && settings.select(e, val);
+    },
+    clear: function () {
+      if (xhr) { xhr.abort(); }
+      settings.clear && settings.clear();
+    }
   });
-
-  selHolderCloseBtn.click(function (e) {
-    e.preventDefault();
-
-    selHolderWrapper.hide();
-    locInput.show();
-    locList.show();
-  });
-
-  selHolderWrapper.append(selHolder);
-  selHolderWrapper.append(selHolderCloseBtn);
-  wrapper.append(locInput);
-  wrapper.append(selHolderWrapper);
-  wrapper.append(locList);
-  node.hide().before(wrapper);
 };
 
 // export plugin
