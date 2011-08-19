@@ -85,9 +85,7 @@ var createLocationPicker = function (settings, node) {
     img_path: settings.flags_path,
     search: function (s, cb) {
       // abort previously triggered xhr
-      if (xhr) {
-        xhr.abort();
-      }
+      if (xhr) { xhr.abort(); }
 
       xhr = $.ajax({
         url: settings.proxy_url + '?s=' + encodeURIComponent(s),
@@ -113,11 +111,11 @@ var createLocationPicker = function (settings, node) {
 
 // export plugin
 $.fn.locationPicker = function (options) {
-  var settings = $.extend(defSettings, options || {});
+  var settings = $.extend({}, defSettings, options || {});
 
   // Add behaviour to each selected input node
   $(this).each(function (i) {
-    createLocationPicker(settings, $(this));
+    createLocationPicker(settings, $(this).addClass('location-picker'));
   });
 };
 
