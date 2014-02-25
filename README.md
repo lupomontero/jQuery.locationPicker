@@ -43,3 +43,7 @@ In order to work around the "same domain policy" affecting XHR requests I have
 included a
 [PHP script](https://github.com/lupomontero/jQuery.locationPicker/blob/master/demo/proxy.php)
 that acts as a proxy.
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/lupomontero/jquery.locationpicker/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
